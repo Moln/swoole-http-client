@@ -24,13 +24,9 @@
   },
   "autoload": {
     "psr-4": {
-      "Application\\": "module/Application/src/",
-      "Utils\\": "library/Utils/"
+      "Moln\\SwooleHttpClient\\": "src/"
     }
   },
   "autoload-dev": {
-    "psr-4": {
-      "ApplicationTest\\": "module/Application/test/"
-    }
   }
 }
