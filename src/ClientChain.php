@@ -1,6 +1,7 @@
 <?php
 
 namespace Moln\SwooleHttpClient;
+
 use Evenement\EventEmitterInterface;
 use Evenement\EventEmitterTrait;
 
@@ -19,7 +20,10 @@ class ClientChain implements EventEmitterInterface
 
     /** @var Client[]  */
     protected $clients;
-    protected $headers = [];
+    protected $headers = [
+        'Connection' => 'keep-alive'
+    ];
+
     protected $cookies = [];
 
     public function __construct($host, $port = 80, $timeout = 0)
@@ -64,12 +68,12 @@ class ClientChain implements EventEmitterInterface
         $client->post($uri, $params, function ($response) use ($client, $callback) {
             $this->push($client);
             $callback && $callback($response);
-        });
+        });.
 
         return $client;
     }
 
-    private function newClient()
+    protected function newClient()
     {
         $client = new Client($this->host, $this->port, $this->timeout);
         $client->setHeaders($this->headers);
@@ -89,16 +93,16 @@ class ClientChain implements EventEmitterInterface
     /**
      * @return Client
      */
-    private function pop()
+    protected function pop()
     {
         if ($this->clients->count() == 0) {
-            $this->clients->push($this->newClient());
+            $this->push($this->newClient());
         }
 
         return $this->clients->pop();
     }
 
-    private function push($client)
+    protected function push($client)
     {
         $this->clients->push($client);
     }
